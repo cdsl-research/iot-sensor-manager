@@ -1,6 +1,8 @@
-from flask import Flask, request
+from flask import *
+from flask_restful import Resource, Api
 from pymongo import *
 import datetime
+import json
 
 
 PRICE = 0
@@ -145,6 +147,8 @@ def getCurrentTime():
     return currentTime
 
 app = Flask(__name__)
+api = Api(app)
+app.config["JSON_AS_ASCII"] = False
 
 @app.route("/")
 def main():
@@ -166,7 +170,37 @@ def register():
             registerSensor(userName,sensorName)
             return f"ユーザ名：{userName}, 登録センサー名 : {sensorName}"
         return "error"
+
+@app.route("/return_list")
+def returnList():
+    client = MongoClient(mongodb_url)
+    db = client["esp32"]
+    collectionList  = []
+    returnText = ""
+    for collectionName in db.list_collection_names():
+        collectionList.append(collectionName)
+    resp = make_response(jsonify({"user": collectionList}))
+    resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
+    return resp
+    
+@app.route("/return_data")
+def returnData():
+    if request.method=="GET":
+        collectionName = request.method.get['col']
+    
+    client = MongoClient(mongodb_url)
+    collection = client["esp32"][collectionName]
+    find =  collection.find(projection={'_id':0},sort=[('_id',-1)])
+    timeList = []
+    nameList = []
+    for doc in find:
+        timeList.append(doc['time'])
+        nameList.append(doc['name'])
+    resp = make_response(jsonify({"time": timeList,"name" : nameList}))
+    resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
+    return resp
+    
    
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=5000,debug=True)
+    app.run(host="0.0.0.0",port=3000,debug=True)

@@ -9,16 +9,24 @@
         <h3>esp32登録用</h3>
         <form action="http://192.168.100.60:5000/register" method="post">
             <input type="text" name="type" value="esp32">
-            <input type="text" name="user" value="名前入力">
-            <input type="text" name="name" value="シリアル番号">
+            <input type="text" name="user" placeholder="名前を入力" list="username">
+            <input type="text" name="name" placeholder="シリアル番号">
             <button type="submit" formmethod="post">送信</button></p>
         </form>
         <h3>センサーorパーツ登録用</h3>
         <form action="http://192.168.100.60:5000/register" method="post">
             <input type="text" name="type" value="sensor">
-            <input type="text" name="user" value="名前入力">
-            <input type="text" name="name" value="センサー名">
+            <input type="text" name="user" placeholder="名前を入力" list="username">
+            <input type="text" name="name" placeholder="センサー名">
             <button type="submit" formmethod="post">送信</button></p>
         </form>
+        <datalist id="username">
+            <option value="杉本一彦"></option>
+            <option value="高木優希"></option>
+            <option value="河竹"></option>
+        </datalist>
+
+        <button onclick="fetchUserInfo('js-primer-example');">Get user info</button>
+        <script src="index.js"></script>
     </body>
 </html>
