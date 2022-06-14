@@ -25,19 +25,15 @@
 
       <h3><?php echo $value2; ?></h3>
       <div class="wrap">
-
         <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/show/col_show.php?q=<?php echo $value2; ?>&type=esp32'" value="esp32リストを参照"></div>
         <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/show/col_show.php?q=<?php echo $value2; ?>&type=sensor'" value="Sensorリストを参照"></div>
         <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/register'" value="ESP32 or センサーを追加"></div>
-        <div class="box"><input type="button" onclick="location.href='http://192.168.100.60:5000/delete_col?type=esp32&col=<?php echo $value2; ?>'" value="データを全削除" id="checkDelete"></div>
-
       </div>
       <hr>
 
   <?php
     }
   }
-
   ?>
 </body>
 
