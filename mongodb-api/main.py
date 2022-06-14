@@ -46,10 +46,10 @@ def mongod_read_non():
 
 
 # deleteall
-def delete_all():
+def delete_all(typeName,colName):
     client = MongoClient(mongodb_url)
 
-    collection = client["a3"]["debug"]
+    collection = client[typeName][colName]
     
     print("---全データ削除---")
     collection.drop()
@@ -163,12 +163,12 @@ def register():
             userName = request.form['user']
             esp32Name = request.form['name']
             registerESP32(userName,esp32Name)
-            return f"ユーザ名：{userName}, 登録ESP32名 : {esp32Name}"
+            return f"ユーザ名：{userName}, 登録ESP32名 : {esp32Name} <h3><a href='http://192.168.100.60/register'>戻る</a></h3> "
         elif typeName == "sensor":
             userName = request.form['user']
             sensorName = request.form['name']
             registerSensor(userName,sensorName)
-            return f"ユーザ名：{userName}, 登録センサー名 : {sensorName}"
+            return f"ユーザ名：{userName}, 登録センサー名 : {sensorName} <h3><a href='http://192.168.100.60/register'>戻る</a></h3> "
         return "error"
 
 @app.route("/return_list")
@@ -186,7 +186,7 @@ def returnList():
 @app.route("/return_data")
 def returnData():
     if request.method=="GET":
-        collectionName = request.method.get['col']
+        collectionName = request.args.get("col")
     
     client = MongoClient(mongodb_url)
     collection = client["esp32"][collectionName]
@@ -198,9 +198,19 @@ def returnData():
         nameList.append(doc['name'])
     resp = make_response(jsonify({"time": timeList,"name" : nameList}))
     resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
+    resp.headers["Content-Type"] = "application/json"
     return resp
+
+@app.route("/delete_col")
+def deleteCollection():
+    if request.method == "GET":
+        typeName = request.args.get("type")
+        collectionName = request.args.get("col")
+    delete_all(typeName,collectionName)
     
+    return "<h3><a href='http://192.168.100.60/show/'>戻る</a></h3>"
+
    
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=3000,debug=True)
+    app.run(host="0.0.0.0",port=5000,debug=True)
