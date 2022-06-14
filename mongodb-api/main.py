@@ -121,11 +121,11 @@ def is_integer_num(n):
 
 
 # センサー&パーツ登録用
-def registerSensor(user,sensor):
+def registerSensor(user,sensor,amount):
     client = MongoClient(mongodb_url)
     collection = client["sensor"][user]
     now = getCurrentTime()
-    collection.insert_one({"time" : now, "name": sensor}) #insert()のサポートはないっぽい
+    collection.insert_one({"time" : now, "name": sensor, "amount" : amount}) #insert()のサポートはないっぽい
 
 # ESP32登録用
 def registerESP32(user,esp32Name):
@@ -167,8 +167,9 @@ def register():
         elif typeName == "sensor":
             userName = request.form['user']
             sensorName = request.form['name']
-            registerSensor(userName,sensorName)
-            return f"ユーザ名：{userName}, 登録センサー名 : {sensorName} <h3><a href='http://192.168.100.60/register'>戻る</a></h3> "
+            sensorAmount = request.form['amount']
+            registerSensor(userName,sensorName,sensorAmount)
+            return f"ユーザ名：{userName}, 登録センサー名 : {sensorName} , 個数 : {sensorAmount}<h3><a href='http://192.168.100.60/register'>戻る</a></h3> "
         return "error"
 
 @app.route("/return_list")
@@ -183,8 +184,8 @@ def returnList():
     resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
     return resp
     
-@app.route("/return_data")
-def returnData():
+@app.route("/return_data_esp32")
+def returnDataEsp32():
     if request.method=="GET":
         collectionName = request.args.get("col")
     
@@ -197,6 +198,26 @@ def returnData():
         timeList.append(doc['time'])
         nameList.append(doc['name'])
     resp = make_response(jsonify({"time": timeList,"name" : nameList}))
+    resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
+    resp.headers["Content-Type"] = "application/json"
+    return resp
+
+@app.route("/return_data_sensor")
+def returnDataSensor():
+    if request.method=="GET":
+        collectionName = request.args.get("col")
+    
+    client = MongoClient(mongodb_url)
+    collection = client["sensor"][collectionName]
+    find =  collection.find(projection={'_id':0},sort=[('_id',-1)])
+    timeList = []
+    nameList = []
+    amountList = []
+    for doc in find:
+        timeList.append(doc['time'])
+        nameList.append(doc['name'])
+        amountList.append(doc['amount'])
+    resp = make_response(jsonify({"time": timeList,"name" : nameList,"amount":amountList}))
     resp.headers["Access-Control-Allow-Origin"] = "http://192.168.100.60"
     resp.headers["Content-Type"] = "application/json"
     return resp
