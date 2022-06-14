@@ -12,6 +12,7 @@
 <body>
   <h2>コレクション一覧</h2>
   <hr>
+
   <?php
   ini_set('display_errors', 1);
   $url = "http://192.168.100.60:5000/return_list";
@@ -21,37 +22,23 @@
   foreach ($params as $key => $value) {
     foreach ($value as $key2 => $value2) {
   ?>
+
+      <h3><?php echo $value2; ?></h3>
       <div class="wrap">
 
+        <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/show/col_show.php?q=<?php echo $value2; ?>&type=esp32'" value="esp32リストを参照"></div>
+        <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/show/col_show.php?q=<?php echo $value2; ?>&type=sensor'" value="Sensorリストを参照"></div>
+        <div class="box"><input type="button" onclick="location.href='http://192.168.100.60/register'" value="ESP32 or センサーを追加"></div>
+        <div class="box"><input type="button" onclick="location.href='http://192.168.100.60:5000/delete_col?type=esp32&col=<?php echo $value2; ?>'" value="データを全削除" id="checkDelete"></div>
 
-        <?php
-        echo '<h3>' . $value2 . '</h3>';
-        echo '<a href="http://192.168.100.60/show/col_show.php?q=' . $value2 . '&type=esp32">esp32</a><br />';
-        echo '<a href="http://192.168.100.60/show/col_show.php?q=' . $value2 . '&type=sensor">sensor</a>';
-        ?>
-        <!-- 折り畳み展開ポインタ -->
-        <div onclick="obj=document.getElementById('open').style; obj.display=(obj.display=='none')?'block':'none';">
-          <a style="cursor:pointer;">▼ クリックでメニュー展開</a>
-        </div>
-        <!--// 折り畳み展開ポインタ -->
+      </div>
+      <hr>
 
-        <!-- 折り畳まれ部分 -->
-        <div id="open" style="display:none;clear:both;">
-
-
-
-      <?php
-      echo '<a href="http://192.168.100.60/register">追加</a> |||';
-      echo '<a href="http://192.168.100.60:5000/delete_col?type=esp32&col=' . $value2 . '">削除</a><br />';
-      echo '</div>';
-      echo '<hr>';
-      echo '</div>';
+  <?php
     }
   }
 
-      ?>
-
-      <!--// 折り畳まれ部分 -->
+  ?>
 </body>
 
 </html>
