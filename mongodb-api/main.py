@@ -10,7 +10,7 @@ PRICE = 0
 mongodb_url = "mongodb://localhost:27017/"
 
 #ckeckstock
-
+ 
 
 def mongod_read(name):
     client = MongoClient(mongodb_url)
@@ -60,6 +60,11 @@ def delete_all(typeName, colName):
 
 # sell
 
+def delete_data(typeName,colName,dataName):
+    client = MongoClient(mongodb_url)
+    collection = client[typeName][colName]
+    print(f"削除対照データ： DATABASE = {typeName} , COLLECTION = {colName}, DATA = {dataName}")
+    collection.delete_one({"name":dataName})
 
 def mongod_sell(name, amount, price):
     global PRICE
@@ -258,6 +263,16 @@ def deleteCollection():
     delete_all(typeName, collectionName)
 
     return "<h3><a href='http://192.168.100.60/show/'>戻る</a></h3>"
+
+@app.route("/delete_data")
+def deleteData():
+    
+    if request.method == "GET":
+        typeName = request.args.get("type")
+        collectionName = request.args.get("col")
+        dataName = request.args.get("data")
+    delete_data(typeName, collectionName,dataName)
+
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width">
   <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" type="text/css" href="bottun_style.css">
   <script src="https://code.jquery.com/jquery-1.6.4.js"></script>
   <title>コレクション一覧</title>
 </head>

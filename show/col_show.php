@@ -21,6 +21,7 @@
       <tr>
         <th>登録時刻</th>
         <th>ESP32名</th>
+        <th>option</th>
       </tr>
 
       <?php
@@ -46,6 +47,9 @@
       for ($i = 0; $i < count($timeList); $i++) {
         echo "<tr>";
         echo "<td>" . $timeList[$i] . "</td><td>" . $nameList[$i] . "</td>";
+        ?>
+        <td><input type="button" onclick="location.href='http://192.168.100.60:5000/delete_data?type=esp32&col=<?php echo $query; ?>&data=<?php echo $nameList[$i]; ?>'" value="データ削除" id="checkDelete"></td>
+        <?php
         echo "</tr>";
       }
     } elseif ($flagType == "sensor") {
@@ -54,6 +58,7 @@
         <th>登録時刻</th>
         <th>センサー名</th>
         <th>個数</th>
+        <th>option</th>
       </tr>
 
     <?php
@@ -82,7 +87,8 @@
       }
       for ($i = 0; $i < count($timeList); $i++) {
         echo "<tr>";
-        echo "<td>" . $timeList[$i] . "</td><td>" . $nameList[$i] . "</td><td>" . $amountList[$i] . "</td>";
+        echo "<td>" . $timeList[$i] . "</td><td>" . $nameList[$i] . "</td><td>" . $amountList[$i] . "</td><td>削除</td>";
+        
         echo "</tr>";
       }
     }
